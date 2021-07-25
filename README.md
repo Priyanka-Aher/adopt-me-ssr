@@ -4,6 +4,7 @@ Practice project
 
 Frontend Masters
 https://frontendmasters.com/courses/complete-react-v6/
+
 https://frontendmasters.com/courses/intermediate-react-v3/
 
 Git Repo
@@ -20,5 +21,7 @@ https://codesandbox.io/s/github/btholt/react-hooks-examples-v3/tree/master/
 
 Performance
 https://calibreapp.com/
+
 https://newrelic.com/
+
 https://azure.microsoft.com/en-us/services/monitor/#features
