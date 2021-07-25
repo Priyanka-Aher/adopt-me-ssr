@@ -1,27 +1,28 @@
-import { useEffect, useState, useContext } from "react";
+import { useState, useEffect, useContext, FunctionComponent } from "react";
+import ThemeContext from "./ThemeContext";
 import useBreedList from "./useBreedList";
-import Results from "./Results";
-import { ThemeContext, ThemeContextProvider } from "./ThemeContext";
+import Results from './Results';
+import { PetAPIResponse, Animal, Pet } from "./APIResponseTypes";
 
 const ANIMALS = ["bird", "cat", "dog", "rabbit", "reptile"];
 
-const SearchParams = () => {
-  const [animal, updateAnimal] = useState("");
+const SearchParams: FunctionComponent = () => {
+  const [animal, updateAnimal] = useState("" as Animal);
   const [location, updateLocation] = useState("");
   const [breed, updateBreed] = useState("");
-  const [pets, setPets] = useState([]);
+  const [pets, setPets] = useState([] as Pet[]);
   const [breeds] = useBreedList(animal);
-  const { theme, setTheme } = useContext(ThemeContext);
+  const [theme, setTheme] = useContext(ThemeContext);
 
   useEffect(() => {
-    requestPets();
-  }, []);
+    void requestPets();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function requestPets() {
     const res = await fetch(
       `http://pets-v2.dev-apis.com/pets?animal=${animal}&location=${location}&breed=${breed}`
     );
-    const json = await res.json();
+    const json = (await res.json()) as PetAPIResponse;
 
     setPets(json.pets);
   }
@@ -31,7 +32,7 @@ const SearchParams = () => {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          requestPets();
+          void requestPets();
         }}
       >
         <label htmlFor="location">
@@ -40,7 +41,7 @@ const SearchParams = () => {
             id="location"
             value={location}
             placeholder="Location"
-            onChange={(e) => updateLocation(e.target.value)}
+            onChange={(e) => updateLocation(e.target.value as Animal)}
           />
         </label>
         <label htmlFor="animal">
@@ -48,8 +49,8 @@ const SearchParams = () => {
           <select
             id="animal"
             value={animal}
-            onChange={(e) => updateAnimal(e.target.value)}
-            onBlur={(e) => updateAnimal(e.target.value)}
+            onChange={(e) => updateAnimal(e.target.value as Animal)}
+            onBlur={(e) => updateAnimal(e.target.value as Animal)}
           >
             <option />
             {ANIMALS.map((animal) => (
@@ -76,22 +77,17 @@ const SearchParams = () => {
             ))}
           </select>
         </label>
-        <label>
+        <label htmlFor="theme">
           Theme
           <select
             value={theme}
-            onChange={(e) => {
-              setTheme(e.target.value);
-            }}
-            onBlur={(e) => {
-              setTheme(e.target.value);
-            }}
+            onChange={(e) => setTheme(e.target.value)}
+            onBlur={(e) => setTheme(e.target.value)}
           >
-            <option value="darkblue">Dark Blue</option>
             <option value="peru">Peru</option>
+            <option value="darkblue">Dark Blue</option>
             <option value="chartreuse">Chartreuse</option>
             <option value="mediumorchid">Medium Orchid</option>
-            <option value="yellow">Yellow</option>
           </select>
         </label>
         <button style={{ backgroundColor: theme }}>Submit</button>
